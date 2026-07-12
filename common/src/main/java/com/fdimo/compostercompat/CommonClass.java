@@ -149,13 +149,13 @@ public class CommonClass {
                 }
                 return new CompostData(0.65f, null, "Flower Block Match");
             }
-            if (block instanceof net.minecraft.world.level.block.MushroomBlock || block instanceof net.minecraft.world.level.block.FungusBlock) {
+            if (block instanceof net.minecraft.world.level.block.MushroomBlock || block instanceof net.minecraft.world.level.block.NetherFungusBlock) {
                 if (DEBUG) {
                     debugLog("Composter mapped {} (Mushroom/Fungus) to 0.65 chance", stack.getHoverName().getString());
                 }
                 return new CompostData(0.65f, null, "Mushroom/Fungus Block Match");
             }
-            if (block instanceof net.minecraft.world.level.block.VineBlock || block instanceof net.minecraft.world.level.block.WaterlilyBlock || block instanceof net.minecraft.world.level.block.HangingRootsBlock || block instanceof net.minecraft.world.level.block.RootsBlock) {
+            if (block instanceof net.minecraft.world.level.block.VineBlock || block instanceof net.minecraft.world.level.block.LilyPadBlock || block instanceof net.minecraft.world.level.block.HangingRootsBlock || block instanceof net.minecraft.world.level.block.NetherRootsBlock) {
                 if (DEBUG) {
                     debugLog("Composter mapped {} (Vine/Roots/Lily) to 0.5 chance", stack.getHoverName().getString());
                 }

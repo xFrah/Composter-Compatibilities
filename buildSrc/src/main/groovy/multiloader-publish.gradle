@@ -9,23 +9,42 @@ publishMods {
 
     changelog = changelogText
     type = STABLE
+    version = project.version
+    displayName = "${project.mod_id}-${project.version}-${project.name}"
 
     // We use the project name (e.g. 'fabric', 'neoforge', 'forge') as the loader
     modLoaders.add(project.name)
 
+    def envFile = rootProject.file(".env")
+    def env = [:]
+    if (envFile.exists()) {
+        envFile.readLines().each { line ->
+            if (line.trim().length() > 0 && !line.startsWith("#")) {
+                def parts = line.split("=", 2)
+                if (parts.length == 2) {
+                    env[parts[0].trim()] = parts[1].trim()
+                }
+            }
+        }
+    }
+    
+    def getSecret = { String key ->
+        return env[key] ?: System.getenv(key)
+    }
+
     if (project.hasProperty("curseforge_id")) {
         curseforge {
-            accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+            accessToken = getSecret("CURSEFORGE_TOKEN")
             projectId = project.curseforge_id
-            minecraftVersions.add(project.minecraft_version)
+            minecraftVersions.addAll(project.publish_minecraft_versions.split(","))
         }
     }
     
     if (project.hasProperty("modrinth_id")) {
         modrinth {
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            accessToken = getSecret("MODRINTH_TOKEN")
             projectId = project.modrinth_id
-            minecraftVersions.add(project.minecraft_version)
+            minecraftVersions.addAll(project.publish_minecraft_versions.split(","))
         }
     }
 }
