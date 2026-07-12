@@ -186,6 +186,29 @@ public class CommonClass {
             return new CompostData(probability, null, "Food Item or c:foods Tag");
         }
 
+        String[] bakingIngredients = {"salt", "salts", "sugar", "sugars", "flour", "flours", "dough", "doughs", "spice", "spices", "batter", "batters"};
+        boolean isBakingIngredient = false;
+        for (String word : bakingIngredients) {
+            if (itemName.equals(word)) {
+                isBakingIngredient = true;
+                break;
+            }
+            for (String tag : tags) {
+                if (tag.equals("c:" + word) || tag.equals("forge:" + word)) {
+                    isBakingIngredient = true;
+                    break;
+                }
+            }
+            if (isBakingIngredient) break;
+        }
+
+        if (isBakingIngredient) {
+            if (DEBUG) {
+                debugLog("Composter mapped {} (Baking/Cooking Ingredient) to 0.3 chance", stack.getHoverName().getString());
+            }
+            return new CompostData(0.3f, null, "Baking/Cooking Ingredient Match");
+        }
+
         if (DEBUG) {
             debugLog("Composter rejected item {}. Tags: {}", stack.getHoverName().getString(), tags);
         }
@@ -412,6 +435,21 @@ public class CommonClass {
                 for (net.minecraft.world.item.crafting.Ingredient ingredient : crossVersionGetIngredients(recipe)) {
                     if (ingredient.isEmpty())
                         continue;
+
+                    boolean isTool = false;
+                    for (net.minecraft.world.item.ItemStack ingredientStack : ingredient.getItems()) {
+                        if (crossVersionGetRemainder(ingredientStack.getItem()) != null) {
+                            isTool = true;
+                            break;
+                        }
+                    }
+                    if (isTool) {
+                        if (DEBUG) {
+                            debugLog("Skipping tool/container ingredient in recipe for {}", BuiltInRegistries.ITEM.getKey(resultItem));
+                        }
+                        continue; // Skip tools and containers (like knives, pots, and buckets)
+                    }
+
                     hasIngredients = true;
 
                     boolean ingredientIsCompostable = false;
