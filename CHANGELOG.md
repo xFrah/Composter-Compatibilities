@@ -1,0 +1,1 @@
+Relying more on class polymorphism
