@@ -1,0 +1,30 @@
+plugins {
+    id 'me.modmuss50.mod-publish-plugin'
+}
+
+publishMods {
+    def changelogFile = rootProject.file("CHANGELOG.md")
+    def changelogText = changelogFile.exists() ? changelogFile.text : "See GitHub releases for changelog."
+
+    changelog = changelogText
+    type = STABLE
+
+    // We use the project name (e.g. 'fabric', 'neoforge', 'forge') as the loader
+    modLoaders.add(project.name)
+
+    if (project.hasProperty("curseforge_id")) {
+        curseforge {
+            accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+            projectId = project.curseforge_id
+            minecraftVersions.add(project.minecraft_version)
+        }
+    }
+    
+    if (project.hasProperty("modrinth_id")) {
+        modrinth {
+            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            projectId = project.modrinth_id
+            minecraftVersions.add(project.minecraft_version)
+        }
+    }
+}
