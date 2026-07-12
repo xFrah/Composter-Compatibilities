@@ -4,9 +4,6 @@ plugins {
     id 'multiloader-publish'
 }
 
-publishMods {
-    file = tasks.named("remapJar").flatMap { it.archiveFile }
-}
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"

@@ -4,9 +4,6 @@ plugins {
     id 'multiloader-publish'
 }
 
-publishMods {
-    file = tasks.named("jar").flatMap { it.archiveFile }
-}
 
 neoForge {
     version = neoforge_version
