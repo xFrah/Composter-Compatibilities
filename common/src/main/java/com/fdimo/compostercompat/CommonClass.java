@@ -125,6 +125,32 @@ public class CommonClass {
 
         if (stack.getItem() instanceof net.minecraft.world.item.BlockItem blockItem) {
             net.minecraft.world.level.block.Block block = blockItem.getBlock();
+            
+            if (block instanceof net.minecraft.world.level.block.LeavesBlock || block instanceof net.minecraft.world.level.block.SaplingBlock || block instanceof net.minecraft.world.level.block.TallGrassBlock || block instanceof net.minecraft.world.level.block.SeagrassBlock) {
+                if (DEBUG) {
+                    debugLog("Composter mapped {} (Leaves/Sapling/Grass) to 0.3 chance", stack.getHoverName().getString());
+                }
+                return new CompostData(0.3f, null, "Leaves/Sapling/Grass Block Match");
+            }
+            if (block instanceof net.minecraft.world.level.block.FlowerBlock || block instanceof net.minecraft.world.level.block.TallFlowerBlock) {
+                if (DEBUG) {
+                    debugLog("Composter mapped {} (Flower) to 0.65 chance", stack.getHoverName().getString());
+                }
+                return new CompostData(0.65f, null, "Flower Block Match");
+            }
+            if (block instanceof net.minecraft.world.level.block.MushroomBlock || block instanceof net.minecraft.world.level.block.FungusBlock) {
+                if (DEBUG) {
+                    debugLog("Composter mapped {} (Mushroom/Fungus) to 0.65 chance", stack.getHoverName().getString());
+                }
+                return new CompostData(0.65f, null, "Mushroom/Fungus Block Match");
+            }
+            if (block instanceof net.minecraft.world.level.block.VineBlock || block instanceof net.minecraft.world.level.block.WaterlilyBlock || block instanceof net.minecraft.world.level.block.HangingRootsBlock || block instanceof net.minecraft.world.level.block.RootsBlock) {
+                if (DEBUG) {
+                    debugLog("Composter mapped {} (Vine/Roots/Lily) to 0.5 chance", stack.getHoverName().getString());
+                }
+                return new CompostData(0.5f, null, "Vine/Roots/Lily Block Match");
+            }
+
             if (block instanceof net.minecraft.world.level.block.BonemealableBlock) {
                 boolean isFullBlock = block.defaultBlockState().isCollisionShapeFullBlock(
                         net.minecraft.world.level.EmptyBlockGetter.INSTANCE, net.minecraft.core.BlockPos.ZERO);
