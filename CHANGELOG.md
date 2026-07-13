@@ -1,1 +1,2 @@
-Relying more on class polymorphism
+- Tools are now ignored while parsing recipes
+- Added some hardcoded baking ingredients to the rules
