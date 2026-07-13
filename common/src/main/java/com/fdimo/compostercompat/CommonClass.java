@@ -449,8 +449,8 @@ public class CommonClass {
                         continue;
 
                     boolean isTool = false;
-                    for (net.minecraft.world.item.ItemStack ingredientStack : ingredient.getItems()) {
-                        if (crossVersionGetRemainder(ingredientStack.getItem()) != null) {
+                    for (net.minecraft.core.Holder<net.minecraft.world.item.Item> ingHolder : ingredient.items().toList()) {
+                        if (crossVersionGetRemainder(ingHolder.value()) != null) {
                             isTool = true;
                             break;
                         }
