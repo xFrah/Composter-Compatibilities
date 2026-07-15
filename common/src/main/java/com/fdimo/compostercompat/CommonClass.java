@@ -29,14 +29,15 @@ public class CommonClass {
     }
 
     public static net.minecraft.world.item.Item crossVersionGetRemainder(net.minecraft.world.item.Item item) {
-        if (item.hasCraftingRemainingItem()) {
-            return item.getCraftingRemainingItem();
+        net.minecraft.world.item.ItemStack remainder = item.getCraftingRemainder();
+        if (remainder != null && !remainder.isEmpty()) {
+            return remainder.getItem();
         }
         return null;
     }
 
     public static java.util.List<net.minecraft.world.item.crafting.Ingredient> crossVersionGetIngredients(net.minecraft.world.item.crafting.Recipe<?> recipe) {
-        return recipe.getIngredients();
+        return recipe.placementInfo().ingredients();
     }
 
     public static net.minecraft.world.item.Item getHeuristicRemainder(net.minecraft.world.item.Item item) {
@@ -66,7 +67,12 @@ public class CommonClass {
 
     public static net.minecraft.world.item.ItemStack getRecipeResult(
             net.minecraft.world.item.crafting.Recipe<?> recipe, net.minecraft.core.RegistryAccess registryAccess) {
-        return recipe.getResultItem(registryAccess);
+        for (net.minecraft.world.item.crafting.display.RecipeDisplay display : recipe.display()) {
+            if (display.result() instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay stackSlot) {
+                return stackSlot.stack();
+            }
+        }
+        return net.minecraft.world.item.ItemStack.EMPTY;
     }
 
     public static CompostData getCompostResult(net.minecraft.world.level.ItemLike itemLike,
@@ -363,10 +369,11 @@ public class CommonClass {
                             }
 
                             if (!craftedWithMeat) {
-                                for (net.minecraft.world.item.ItemStack ingredientStack : ingredient.getItems()) {
+                                for (net.minecraft.core.Holder<net.minecraft.world.item.Item> ingHolder : ingredient.items().toList()) {
+                                    net.minecraft.world.item.Item ingItem = ingHolder.value();
+                                    net.minecraft.world.item.ItemStack ingredientStack = new net.minecraft.world.item.ItemStack(ingItem);
                                     if (ingredientStack.isEmpty())
                                         continue;
-                                    net.minecraft.world.item.Item ingItem = ingredientStack.getItem();
                                     String ingName = BuiltInRegistries.ITEM.getKey(ingItem).getPath()
                                             .toLowerCase();
                                     java.util.List<String> ingTags = crossVersionGetTags(ingredientStack);
@@ -437,8 +444,8 @@ public class CommonClass {
                         continue;
 
                     boolean isTool = false;
-                    for (net.minecraft.world.item.ItemStack ingredientStack : ingredient.getItems()) {
-                        if (crossVersionGetRemainder(ingredientStack.getItem()) != null) {
+                    for (net.minecraft.core.Holder<net.minecraft.world.item.Item> ingHolder : ingredient.items().toList()) {
+                        if (crossVersionGetRemainder(ingHolder.value()) != null) {
                             isTool = true;
                             break;
                         }
@@ -457,8 +464,8 @@ public class CommonClass {
 
                     // If at least one valid item for this ingredient slot is compostable, we
                     // consider the slot satisfied.
-                    for (net.minecraft.world.item.ItemStack ingredientStack : ingredient.getItems()) {
-                        net.minecraft.world.item.Item ingItem = ingredientStack.getItem();
+                    for (net.minecraft.core.Holder<net.minecraft.world.item.Item> ingHolder : ingredient.items().toList()) {
+                        net.minecraft.world.item.Item ingItem = ingHolder.value();
                         if (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(ingItem)) {
                             ingredientIsCompostable = true;
                             float prob = net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.getFloat(ingItem);
