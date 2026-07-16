@@ -165,10 +165,10 @@ public class CommonClass {
             }
         }
 
-        net.minecraft.world.food.FoodProperties food = stack.get(net.minecraft.core.component.DataComponents.FOOD);
+        net.minecraft.world.food.FoodProperties food = stack.getItem().getFoodProperties();
 
         if (food != null || tags.contains("c:foods")) {
-            int nutrition = food != null ? food.nutrition() : 4; // Default to 4 (medium) if it only has the tag
+            int nutrition = food != null ? food.getNutrition() : 4; // Default to 4 (medium) if it only has the tag
             float probability;
             if (nutrition <= 2) {
                 probability = 0.3f; // e.g., Melon Slice, Sweet Berries
@@ -346,8 +346,7 @@ public class CommonClass {
             remainder = crossVersionGetRemainder(item);
 
             if (remainder == null) {
-                for (net.minecraft.world.item.crafting.RecipeHolder<?> recipeHolder : recipeManager.getRecipes()) {
-                    net.minecraft.world.item.crafting.Recipe<?> recipe = recipeHolder.value();
+                for (net.minecraft.world.item.crafting.Recipe<?> recipe : recipeManager.getRecipes()) {
                     net.minecraft.world.item.ItemStack result = getRecipeResult(recipe, registryAccess);
 
                     if (result != null && !result.isEmpty() && result.is(item)) {
@@ -415,8 +414,7 @@ public class CommonClass {
         for (int iteration = 0; iteration < 5; iteration++) {
             boolean changed = false;
 
-            for (net.minecraft.world.item.crafting.RecipeHolder<?> recipeHolder : recipeManager.getRecipes()) {
-                net.minecraft.world.item.crafting.Recipe<?> recipe = recipeHolder.value();
+            for (net.minecraft.world.item.crafting.Recipe<?> recipe : recipeManager.getRecipes()) {
                 net.minecraft.world.item.ItemStack resultStack = getRecipeResult(recipe, registryAccess);
 
                 if (resultStack == null || resultStack.isEmpty())

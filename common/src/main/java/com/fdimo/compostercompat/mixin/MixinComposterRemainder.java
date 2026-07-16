@@ -36,8 +36,9 @@ public class MixinComposterRemainder {
         }
     }
 
-    @Inject(method = "useItemOn", at = @At("HEAD"))
-    private void onUseItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult, CallbackInfoReturnable<net.minecraft.world.InteractionResult> cir) {
+    @Inject(method = "use", at = @At("HEAD"))
+    private void onUse(BlockState state, Level level, BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult, CallbackInfoReturnable<net.minecraft.world.InteractionResult> cir) {
+        ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide() && !stack.isEmpty()) {
             if (!ComposterBlock.COMPOSTABLES.containsKey(stack.getItem())) {
                 java.util.List<String> tags = com.fdimo.compostercompat.CommonClass.crossVersionGetTags(stack);
