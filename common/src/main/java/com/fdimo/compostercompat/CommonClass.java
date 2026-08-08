@@ -69,6 +69,52 @@ public class CommonClass {
         return recipe.getResultItem(registryAccess);
     }
 
+    /**
+     * Checks if an item has tag-based compostability overrides.
+     * Tags are checked in priority order:
+     * 1. c:not_compostable — nullifies compostability entirely
+     * 2. c:compostable/chance_* — forces a specific probability (highest wins)
+     *
+     * @return CompostData if a tag override was found, null otherwise (fall through to heuristics)
+     */
+    private static CompostData checkTagOverrides(net.minecraft.world.item.ItemStack stack) {
+        java.util.List<String> tags = crossVersionGetTags(stack);
+
+        // Nullifier — highest priority
+        for (String tag : tags) {
+            if (tag.equals("c:not_compostable")) {
+                debugLog("Tag override: {} is NOT compostable (nullified by c:not_compostable)",
+                        stack.getHoverName().getString());
+                return new CompostData(-1.0f, null, "Tag: c:not_compostable");
+            }
+        }
+
+        // Compostable overrides — pick highest probability
+        float bestProb = -1.0f;
+        String bestTag = null;
+        for (String tag : tags) {
+            if (tag.startsWith("c:compostable/chance_")) {
+                String suffix = tag.substring("c:compostable/chance_".length());
+                try {
+                    float prob = Integer.parseInt(suffix) / 100.0f;
+                    if (prob > bestProb) {
+                        bestProb = prob;
+                        bestTag = tag;
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+
+        if (bestProb > 0) {
+            debugLog("Tag override: {} compostable at {} (from tag {})",
+                    stack.getHoverName().getString(), bestProb, bestTag);
+            return new CompostData(bestProb, null, "Tag: " + bestTag);
+        }
+
+        return null; // No tag override — fall through to normal logic
+    }
+
     public static CompostData getCompostResult(net.minecraft.world.level.ItemLike itemLike,
             net.minecraft.core.RegistryAccess registryAccess,
             net.minecraft.world.item.crafting.RecipeManager recipeManager) {
@@ -76,6 +122,12 @@ public class CommonClass {
     }
 
     public static CompostData getCompostResult(net.minecraft.world.item.ItemStack stack) {
+        // Tag overrides have absolute priority over everything
+        CompostData tagOverride = checkTagOverrides(stack);
+        if (tagOverride != null) {
+            return tagOverride;
+        }
+
         if (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(stack.getItem())) {
             float existingValue = net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.getFloat(stack.getItem());
             if (DEBUG) {
@@ -304,6 +356,15 @@ public class CommonClass {
             CompostData compostResult = getCompostResult(stack);
             float probability = compostResult.probability;
 
+            // Tag nullifier: remove from vanilla map if it was there
+            if (compostResult.reason != null && compostResult.reason.equals("Tag: c:not_compostable")) {
+                synchronized (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES) {
+                    net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.removeFloat(item);
+                }
+                COMPOSTER_CACHE.put(item, compostResult);
+                continue;
+            }
+
             if (probability > 0) {
                 synchronized (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES) {
                     net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.put(item, probability);
@@ -423,6 +484,13 @@ public class CommonClass {
 
                 // If it's already compostable, we don't need to do anything
                 if (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(resultItem)) {
+                    continue;
+                }
+
+                // Skip items tagged as not_compostable — don't propagate into them
+                CompostData cachedData = COMPOSTER_CACHE.get(resultItem);
+                if (cachedData != null && cachedData.reason != null
+                        && cachedData.reason.equals("Tag: c:not_compostable")) {
                     continue;
                 }
 
