@@ -13,3 +13,46 @@ A lightweight mod that dynamically makes items compostable! Its main goal is to 
 ## Compatibility
 
 This mod works dynamically by analyzing item properties, tags, and crafting recipes at startup. It provides instant compatibility with almost any modded item, no data packs or configuration required!
+
+## For Mod & Modpack Creators
+
+Need to override the automatic behavior? You can use **item tags** to force items to be compostable (at a specific chance) or to prevent them from being composted entirely. No code or dependency required — just add a JSON file to your datapack or mod.
+
+### Available Tags
+
+| Tag | Effect |
+|---|---|
+| `c:not_compostable` | **Prevents** the item from being composted, even if it would normally be compostable |
+| `c:compostable/chance_30` | Makes the item compostable with a **30%** chance |
+| `c:compostable/chance_50` | Makes the item compostable with a **50%** chance |
+| `c:compostable/chance_65` | Makes the item compostable with a **65%** chance |
+| `c:compostable/chance_85` | Makes the item compostable with a **85%** chance |
+| `c:compostable/chance_100` | Makes the item compostable with a **100%** chance |
+
+> **Priority:** `c:not_compostable` always wins. If multiple `chance_*` tags are present, the highest one is used. Tag overrides are applied before all automatic detection.
+
+### Example: Make an item compostable
+
+Create a file at `data/c/tags/item/compostable/chance_65.json` in your datapack or mod resources:
+
+```json
+{
+  "replace": false,
+  "values": [
+    "examplemod:rubber_duck"
+  ]
+}
+```
+
+### Example: Prevent an item from being composted
+
+Create a file at `data/c/tags/item/not_compostable.json`:
+
+```json
+{
+  "replace": false,
+  "values": [
+    "minecraft:rotten_flesh"
+  ]
+}
+```

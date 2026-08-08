@@ -1,2 +1,1 @@
-- Tools are now ignored while parsing recipes
-- Added some hardcoded baking ingredients to the rules
+- Added tags for mod/modpack/datapack creators to control compostability
