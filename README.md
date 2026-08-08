@@ -33,7 +33,7 @@ Need to override the automatic behavior? You can use **item tags** to force item
 
 ### Example: Make an item compostable
 
-Create a file at `data/c/tags/item/compostable/chance_65.json` in your datapack or mod resources:
+Create a file at `data/c/tags/item/compostable/chance_65.json` in your datapack or mod resources (for 1.20.1 and older, use `tags/items/` instead of `tags/item/`):
 
 ```json
 {
@@ -46,7 +46,7 @@ Create a file at `data/c/tags/item/compostable/chance_65.json` in your datapack 
 
 ### Example: Prevent an item from being composted
 
-Create a file at `data/c/tags/item/not_compostable.json`:
+Create a file at `data/c/tags/item/not_compostable.json` (for 1.20.1 and older, use `tags/items/`):
 
 ```json
 {
