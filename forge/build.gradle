@@ -4,10 +4,6 @@ plugins {
     id 'multiloader-publish'
 }
 
-publishMods {
-    file = tasks.named("jar").flatMap { it.archiveFile }
-}
-
 mixin {
     add(sourceSets.main, "${mod_id}.refmap.json")
 
@@ -61,11 +57,11 @@ jar {
     ])
 }
 
-// Ensure the jar is reobfuscated before publishing.
-// finalizedBy doesn't create a task dependency, so without this,
-// publishMods can run between jar and reobfJar, uploading the dev jar.
+// Point publishMods at the reobfuscated jar.
+// MDG redirects jar.archiveFile to build/devlibs, so we must use
+// reobfJar's output instead, otherwise the dev jar gets published.
 afterEvaluate {
-    tasks.withType(me.modmuss50.mpp.PublishModTask).configureEach {
-        dependsOn('reobfJar')
+    publishMods {
+        file = tasks.named("reobfJar").flatMap { it.archiveFile }
     }
 }
