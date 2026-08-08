@@ -75,15 +75,15 @@
       "projectName": "forge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\build\\moddev\\clientRunProgramArgs.txt"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\bin\\main"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\forge\\run",
       "env": {
-        "MOD_CLASSES": "composter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\bin\\main"
+        "MOD_CLASSES": "composter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\bin\\main"
       },
       "console": "internalConsole",
       "shortenCommandLine": "none"
@@ -99,15 +99,15 @@
       "projectName": "forge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\build\\moddev\\dataRunProgramArgs.txt"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\bin\\main"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\forge\\run",
       "env": {
-        "MOD_CLASSES": "composter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\bin\\main"
+        "MOD_CLASSES": "composter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\bin\\main"
       },
       "console": "internalConsole",
       "shortenCommandLine": "none"
@@ -123,15 +123,15 @@
       "projectName": "forge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\build\\moddev\\serverRunProgramArgs.txt"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\bin\\main"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\forge\\run",
       "env": {
-        "MOD_CLASSES": "composter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\forge\\bin\\main"
+        "MOD_CLASSES": "composter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\forge\\bin\\main"
       },
       "console": "internalConsole",
       "shortenCommandLine": "none"

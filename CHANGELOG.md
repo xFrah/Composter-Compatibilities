@@ -1,2 +1,3 @@
 - Tools are now ignored while parsing recipes
 - Added some hardcoded baking ingredients to the rules
+- Fixed Forge 1.20.1 crash

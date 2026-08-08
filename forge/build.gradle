@@ -60,3 +60,12 @@ jar {
             "MixinConfigs": "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
     ])
 }
+
+// Ensure the jar is reobfuscated before publishing.
+// finalizedBy doesn't create a task dependency, so without this,
+// publishMods can run between jar and reobfJar, uploading the dev jar.
+afterEvaluate {
+    tasks.withType(me.modmuss50.mpp.PublishModTask).configureEach {
+        dependsOn('reobfJar')
+    }
+}
