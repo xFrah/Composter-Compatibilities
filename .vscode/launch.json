@@ -12,11 +12,11 @@
       "projectName": "neoforge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\build\\moddev\\clientRunProgramArgs.txt"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\bin\\main"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\neoforge\\run",
       "env": {},
@@ -34,11 +34,11 @@
       "projectName": "neoforge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\build\\moddev\\dataRunProgramArgs.txt"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\bin\\main"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\neoforge\\run",
       "env": {},
@@ -56,11 +56,11 @@
       "projectName": "neoforge",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\build\\moddev\\serverRunProgramArgs.txt"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\MultiLoader-Template\\neoforge\\bin\\main"
+        "@C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcomposter_compat%%C:\\Users\\fdimo\\Desktop\\Composter Compatibilities\\neoforge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\neoforge\\run",
       "env": {},
