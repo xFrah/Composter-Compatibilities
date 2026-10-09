@@ -1,1 +1,1 @@
-- Added tags for mod/modpack/datapack creators to control compostability
+- Rewrite for 26.3

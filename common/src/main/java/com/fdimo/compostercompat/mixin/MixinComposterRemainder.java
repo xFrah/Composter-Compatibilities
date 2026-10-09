@@ -17,9 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ComposterBlock.class)
 public class MixinComposterRemainder {
 
-    @Inject(method = "addItem", at = @At("HEAD"))
-    private static void onAddItem(Entity entity, BlockState state, net.minecraft.world.level.LevelAccessor levelAccessor, BlockPos pos, ItemStack stack, CallbackInfoReturnable<BlockState> cir) {
-        if (levelAccessor instanceof Level level && !level.isClientSide()) {
+    @Inject(method = "insertItem", at = @At("HEAD"))
+    private static void onInsertItem(Entity entity, BlockState state, net.minecraft.server.level.ServerLevel level, ItemStack stack, BlockPos pos, CallbackInfoReturnable<BlockState> cir) {
+        if (level != null) {
             int i = state.getValue(ComposterBlock.LEVEL);
             if (i < 7) {
                 com.fdimo.compostercompat.CommonClass.CompostData data = com.fdimo.compostercompat.CommonClass.COMPOSTER_CACHE.get(stack.getItem());
@@ -39,10 +39,18 @@ public class MixinComposterRemainder {
     @Inject(method = "useItemOn", at = @At("HEAD"))
     private void onUseItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult, CallbackInfoReturnable<net.minecraft.world.InteractionResult> cir) {
         if (!level.isClientSide() && !stack.isEmpty()) {
-            if (!ComposterBlock.COMPOSTABLES.containsKey(stack.getItem())) {
+            if (com.fdimo.compostercompat.CommonClass.getCompostChance(stack.getItem()) <= 0) {
                 java.util.List<String> tags = com.fdimo.compostercompat.CommonClass.crossVersionGetTags(stack);
                 if (com.fdimo.compostercompat.CommonClass.DEBUG) {
                     com.fdimo.compostercompat.CommonClass.debugLog("Composter interacted with rejected item {}. Tags: {}", stack.getHoverName().getString(), tags);
+                }
+            } else {
+                int fillLevel = state.getValue(ComposterBlock.LEVEL);
+                if (fillLevel < 7) {
+                    com.fdimo.compostercompat.CommonClass.CompostData data = com.fdimo.compostercompat.CommonClass.COMPOSTER_CACHE.get(stack.getItem());
+                    if (data != null && data.probability > 0) {
+                        spawnCraftingRemainder(level, pos, data.remainder);
+                    }
                 }
             }
         }

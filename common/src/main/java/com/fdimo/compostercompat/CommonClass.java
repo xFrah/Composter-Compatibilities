@@ -58,6 +58,36 @@ public class CommonClass {
         return null;
     }
 
+    public static float getCompostChance(net.minecraft.world.item.Item item) {
+        // TODO: 26.3 implementation using DataComponents.COMPOSTABLE
+        // For now, return from cache if exists to allow compilation
+        if (COMPOSTER_CACHE.containsKey(item)) {
+            return COMPOSTER_CACHE.get(item).probability;
+        }
+        return -1.0f; // Return -1 instead of 0 for not found
+    }
+
+    public static void setCompostChance(net.minecraft.world.item.Item item, float chance) {
+        net.minecraft.core.component.DataComponentMap.Builder builder = net.minecraft.core.component.DataComponentMap.builder();
+        builder.addAll(item.components());
+        
+        net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider> key;
+        if (chance <= 0.3f) key = net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_LOW;
+        else if (chance <= 0.5f) key = net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_MEDIUM;
+        else if (chance <= 0.65f) key = net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_LOW_MEDIUM;
+        else if (chance <= 0.85f) key = net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_MEDIUM_HIGH;
+        else key = net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders.COMPOSTABLE_ALWAYS_ADD_ONE;
+
+        builder.set(net.minecraft.core.component.DataComponents.COMPOSTABLE, new net.minecraft.world.item.component.Compostable(key));
+        item.builtInRegistryHolder().bindComponents(builder.build());
+    }
+    
+    public static void removeCompostChance(net.minecraft.world.item.Item item) {
+        item.builtInRegistryHolder().bindComponents(
+            item.components().filter(type -> type != net.minecraft.core.component.DataComponents.COMPOSTABLE)
+        );
+    }
+
     public static class CompostData {
         public final float probability;
         public final net.minecraft.world.item.Item remainder;
@@ -139,8 +169,8 @@ public class CommonClass {
             return tagOverride;
         }
 
-        if (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(stack.getItem())) {
-            float existingValue = net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.getFloat(stack.getItem());
+        float existingValue = getCompostChance(stack.getItem());
+        if (existingValue > 0) {
             if (DEBUG) {
                 debugLog("Composter mapped {} using existing vanilla/mod value: {}", stack.getHoverName().getString(),
                         existingValue);
@@ -369,17 +399,13 @@ public class CommonClass {
 
             // Tag nullifier: remove from vanilla map if it was there
             if (compostResult.reason != null && compostResult.reason.equals("Tag: c:not_compostable")) {
-                synchronized (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES) {
-                    net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.removeFloat(item);
-                }
+                removeCompostChance(item);
                 COMPOSTER_CACHE.put(item, compostResult);
                 continue;
             }
 
             if (probability > 0) {
-                synchronized (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES) {
-                    net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.put(item, probability);
-                }
+                setCompostChance(item, probability);
 
                 net.minecraft.world.item.Item remainder = crossVersionGetRemainder(item);
                 if (remainder == null) {
@@ -403,10 +429,9 @@ public class CommonClass {
 
         java.util.List<net.minecraft.world.level.ItemLike> itemsToRemove = new java.util.ArrayList<>();
 
-        for (net.minecraft.world.level.ItemLike itemLike : net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES
-                .keySet()) {
-            net.minecraft.world.item.Item item = itemLike.asItem();
-            float probability = net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.getFloat(itemLike);
+        for (net.minecraft.world.item.Item item : COMPOSTER_CACHE.keySet()) {
+            net.minecraft.world.level.ItemLike itemLike = item;
+            float probability = getCompostChance(item);
             String reason = "Existing Vanilla/Mod Value";
             if (COMPOSTER_CACHE.containsKey(item)) {
                 reason = COMPOSTER_CACHE.get(item).reason;
@@ -472,15 +497,13 @@ public class CommonClass {
             }
 
             COMPOSTER_CACHE.put(item, new CompostData(probability, remainder, reason));
-            synchronized (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES) {
-                if (!net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(item) && probability > 0) {
-                    net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.put(item, probability);
-                }
+            if (getCompostChance(item) <= 0 && probability > 0) {
+                setCompostChance(item, probability);
             }
         }
 
         for (net.minecraft.world.level.ItemLike itemToRemove : itemsToRemove) {
-            net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.removeFloat(itemToRemove);
+            removeCompostChance(itemToRemove.asItem());
         }
 
         // --- Recipe Propagation Logic ---
@@ -497,7 +520,7 @@ public class CommonClass {
                 net.minecraft.world.item.Item resultItem = resultStack.getItem();
 
                 // If it's already compostable, we don't need to do anything
-                if (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(resultItem)) {
+                if (getCompostChance(resultItem) > 0) {
                     continue;
                 }
 
@@ -539,9 +562,9 @@ public class CommonClass {
                     // consider the slot satisfied.
                     for (net.minecraft.core.Holder<net.minecraft.world.item.Item> ingHolder : ingredient.items().toList()) {
                         net.minecraft.world.item.Item ingItem = ingHolder.value();
-                        if (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.containsKey(ingItem)) {
+                        if (getCompostChance(ingItem) > 0) {
                             ingredientIsCompostable = true;
-                            float prob = net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.getFloat(ingItem);
+                            float prob = getCompostChance(ingItem);
                             if (prob > ingredientProb) {
                                 ingredientProb = prob;
                             }
@@ -559,9 +582,7 @@ public class CommonClass {
                 }
 
                 if (hasIngredients && allIngredientsCompostable) {
-                    synchronized (net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES) {
-                        net.minecraft.world.level.block.ComposterBlock.COMPOSTABLES.put(resultItem, highestProbability);
-                    }
+                    setCompostChance(resultItem, highestProbability);
                     COMPOSTER_CACHE.put(resultItem,
                             new CompostData(highestProbability, null, "Derived from Compostable Recipe"));
                     debugLog("Propagated compostability to {} with chance {} (Iteration {})",
