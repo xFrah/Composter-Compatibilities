@@ -14,9 +14,10 @@ public class CommonClass {
     // projects. This example has some
     // code that gets invoked by the entry point of the loader specific projects.
     public static void init() {
+        ModConfig.load();
     }
 
-    public static final boolean DEBUG = false; // Set to false to disable console spam
+    public static boolean DEBUG = ModConfig.debug; // Configurable via composter_compat.toml
 
     public static void debugLog(String message, Object... args) {
         if (DEBUG) {
@@ -194,6 +195,24 @@ public class CommonClass {
             return new CompostData(0.2f, null, "Drink Keyword Match");
         }
 
+        boolean isRottenFlesh = itemName.contains("rotten_flesh")
+                || itemName.contains("rotten-flesh")
+                || stack.is(net.minecraft.world.item.Items.ROTTEN_FLESH);
+
+        if (isRottenFlesh) {
+            if (ModConfig.rottenFleshCompostable) {
+                if (DEBUG) {
+                    debugLog("Composter mapped {} (Rotten Flesh) to 0.65 chance", stack.getHoverName().getString());
+                }
+                return new CompostData(0.65f, null, "Rotten Flesh");
+            } else {
+                if (DEBUG) {
+                    debugLog("Composter rejected item {} (Rotten Flesh). Tags: {}", stack.getHoverName().getString(), tags);
+                }
+                return new CompostData(-1.0f, null, "Rotten Flesh");
+            }
+        }
+
         boolean isMeat = isMeatLike(itemName, tags);
 
         if (isMeat) {
@@ -315,6 +334,14 @@ public class CommonClass {
     }
 
     private static boolean isMeatLike(String itemName, java.util.List<String> tags) {
+        boolean isRotten = itemName.contains("rotten_flesh") || itemName.contains("rotten-flesh");
+        if (isRotten) {
+            return !ModConfig.rottenFleshCompostable;
+        }
+        if (ModConfig.meatCompostable) {
+            return false;
+        }
+
         java.util.List<String> filteredTags = tags.stream()
                 .filter(tag -> !tag.endsWith("_food"))
                 .toList();
@@ -364,6 +391,7 @@ public class CommonClass {
     public static final java.util.Map<net.minecraft.world.item.Item, CompostData> COMPOSTER_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
 
     public static void rebuildComposterMap() {
+        ModConfig.load();
         debugLog("Rebuilding Vanilla Composter Map with Tag values...");
         boolean warnedUnbound = false;
         for (net.minecraft.world.item.Item item : BuiltInRegistries.ITEM) {
@@ -409,6 +437,7 @@ public class CommonClass {
 
     public static void populateComposterCache(net.minecraft.world.item.crafting.RecipeManager recipeManager,
             net.minecraft.core.RegistryAccess registryAccess) {
+        ModConfig.load();
         debugLog("Populating Eager Composter Cache...");
 
         // Ensure the vanilla map is fully rebuilt before we populate the cache!
