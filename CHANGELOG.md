@@ -1,1 +1,1 @@
-- Added tags for mod/modpack/datapack creators to control compostability
+- Added config file + flags for meat and rotten meat
