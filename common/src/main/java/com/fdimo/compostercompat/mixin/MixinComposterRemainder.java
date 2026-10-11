@@ -39,7 +39,7 @@ public class MixinComposterRemainder {
     @Inject(method = "useItemOn", at = @At("HEAD"))
     private void onUseItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hitResult, CallbackInfoReturnable<net.minecraft.world.InteractionResult> cir) {
         if (!level.isClientSide() && !stack.isEmpty()) {
-            if (!ComposterBlock.COMPOSTABLES.containsKey(stack.getItem())) {
+            if (com.fdimo.compostercompat.CommonClass.getCompostChance(stack.getItem()) <= 0) {
                 java.util.List<String> tags = com.fdimo.compostercompat.CommonClass.crossVersionGetTags(stack);
                 if (com.fdimo.compostercompat.CommonClass.DEBUG) {
                     com.fdimo.compostercompat.CommonClass.debugLog("Composter interacted with rejected item {}. Tags: {}", stack.getHoverName().getString(), tags);
