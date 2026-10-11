@@ -1,1 +1,1 @@
-- Rewrite for 26.3
+- Added config file + flags for meat and rotten meat
