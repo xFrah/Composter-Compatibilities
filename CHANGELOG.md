@@ -1,1 +1,1 @@
-- Added config file + flags for meat and rotten meat
+- Fix compatibility issues
