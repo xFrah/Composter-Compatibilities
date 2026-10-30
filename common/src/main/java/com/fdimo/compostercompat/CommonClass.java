@@ -38,7 +38,12 @@ public class CommonClass {
     }
 
     public static java.util.List<net.minecraft.world.item.crafting.Ingredient> crossVersionGetIngredients(net.minecraft.world.item.crafting.Recipe<?> recipe) {
-        return recipe.placementInfo().ingredients();
+        try {
+            java.util.List<net.minecraft.world.item.crafting.Ingredient> ingredients = recipe.placementInfo().ingredients();
+            return ingredients != null ? ingredients : java.util.Collections.emptyList();
+        } catch (Throwable t) {
+            return java.util.Collections.emptyList();
+        }
     }
 
     public static net.minecraft.world.item.Item getHeuristicRemainder(net.minecraft.world.item.Item item) {
@@ -90,12 +95,16 @@ public class CommonClass {
 
     public static net.minecraft.world.item.ItemStack getRecipeResult(
             net.minecraft.world.item.crafting.Recipe<?> recipe, net.minecraft.core.RegistryAccess registryAccess) {
-        for (net.minecraft.world.item.crafting.display.RecipeDisplay display : recipe.display()) {
-            if (display.result() instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay stackSlot) {
-                return stackSlot.stack();
+        try {
+            for (net.minecraft.world.item.crafting.display.RecipeDisplay display : recipe.display()) {
+                if (display.result() instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay stackSlot) {
+                    return stackSlot.stack();
+                }
             }
+            return net.minecraft.world.item.ItemStack.EMPTY;
+        } catch (Throwable t) {
+            return net.minecraft.world.item.ItemStack.EMPTY;
         }
-        return net.minecraft.world.item.ItemStack.EMPTY;
     }
 
     /**
