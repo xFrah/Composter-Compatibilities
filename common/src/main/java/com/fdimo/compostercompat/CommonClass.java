@@ -643,10 +643,10 @@ public class CommonClass {
             net.minecraft.world.item.Item item = entry.getKey();
             CompostData data = entry.getValue();
             if (data != null && data.probability > 0) {
-                net.minecraft.resources.ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
-                net.minecraft.resources.ResourceLocation remainderId = data.remainder != null
-                        ? BuiltInRegistries.ITEM.getKey(data.remainder)
-                        : null;
+                int itemId = BuiltInRegistries.ITEM.getId(item);
+                int remainderId = data.remainder != null
+                        ? BuiltInRegistries.ITEM.getId(data.remainder)
+                        : -1;
                 entries.add(new com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry(itemId, data.probability, remainderId));
             }
         }
@@ -657,15 +657,14 @@ public class CommonClass {
         ModConfig.load();
         int count = 0;
         for (com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry entry : entries) {
-            net.minecraft.world.item.Item item = BuiltInRegistries.ITEM.get(entry.itemId());
-            if (item != net.minecraft.world.item.Items.AIR) {
+            net.minecraft.world.item.Item item = BuiltInRegistries.ITEM.byId(entry.itemId());
+            if (item != null && item != net.minecraft.world.item.Items.AIR) {
                 setCompostChance(item, entry.probability());
-                net.minecraft.world.item.Item remainder = null;
-                if (entry.remainderId() != null) {
-                    remainder = BuiltInRegistries.ITEM.get(entry.remainderId());
-                    if (remainder == net.minecraft.world.item.Items.AIR) {
-                        remainder = null;
-                    }
+                net.minecraft.world.item.Item remainder = entry.remainderId() >= 0
+                        ? BuiltInRegistries.ITEM.byId(entry.remainderId())
+                        : null;
+                if (remainder == net.minecraft.world.item.Items.AIR) {
+                    remainder = null;
                 }
                 COMPOSTER_CACHE.put(item, new CompostData(entry.probability(), remainder, "Synced from Server"));
                 count++;
