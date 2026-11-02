@@ -1,1 +1,2 @@
+- Sync compostables to client via network packet for recipe viewers
 - Added mod icon
