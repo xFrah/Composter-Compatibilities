@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "com.fdimo.compostercompat.ComposterCompatMod"
+        ],
+        "client": [
+            "com.fdimo.compostercompat.client.ComposterCompatClient"
         ]
     },
     "mixins": [
@@ -33,4 +36,3 @@
         "another-mod": "*"
     }
 }
-  

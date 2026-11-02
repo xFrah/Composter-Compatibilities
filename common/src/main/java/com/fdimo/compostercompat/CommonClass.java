@@ -618,4 +618,41 @@ public class CommonClass {
 
         Constants.LOG.info("Successfully populated Composter Cache with {} items!", COMPOSTER_CACHE.size());
     }
+
+    public static com.fdimo.compostercompat.network.SyncCompostablesPayload createSyncPayload() {
+        java.util.List<com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry> entries = new java.util.ArrayList<>();
+        for (java.util.Map.Entry<net.minecraft.world.item.Item, CompostData> entry : COMPOSTER_CACHE.entrySet()) {
+            net.minecraft.world.item.Item item = entry.getKey();
+            CompostData data = entry.getValue();
+            if (data != null && data.probability > 0) {
+                net.minecraft.resources.ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+                net.minecraft.resources.ResourceLocation remainderId = data.remainder != null
+                        ? BuiltInRegistries.ITEM.getKey(data.remainder)
+                        : null;
+                entries.add(new com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry(itemId, data.probability, remainderId));
+            }
+        }
+        return new com.fdimo.compostercompat.network.SyncCompostablesPayload(entries);
+    }
+
+    public static void applySyncedCompostables(java.util.List<com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry> entries) {
+        ModConfig.load();
+        int count = 0;
+        for (com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry entry : entries) {
+            net.minecraft.world.item.Item item = BuiltInRegistries.ITEM.get(entry.itemId());
+            if (item != net.minecraft.world.item.Items.AIR) {
+                setCompostChance(item, entry.probability());
+                net.minecraft.world.item.Item remainder = null;
+                if (entry.remainderId() != null) {
+                    remainder = BuiltInRegistries.ITEM.get(entry.remainderId());
+                    if (remainder == net.minecraft.world.item.Items.AIR) {
+                        remainder = null;
+                    }
+                }
+                COMPOSTER_CACHE.put(item, new CompostData(entry.probability(), remainder, "Synced from Server"));
+                count++;
+            }
+        }
+        Constants.LOG.info("Successfully received and applied {} compostables from server!", count);
+    }
 }
