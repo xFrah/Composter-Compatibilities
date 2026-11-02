@@ -28,7 +28,7 @@ public class MixinComposterRemainder {
                     if (com.fdimo.compostercompat.CommonClass.DEBUG) {
                         com.fdimo.compostercompat.CommonClass.debugLog("Composter used with item {}. Tags: {}. Reason: {}. Remainder: {}", stack.getHoverName().getString(), tags, data.reason, data.remainder);
                     }
-                    spawnCraftingRemainder(level, pos, data.remainder);
+                    com.fdimo.compostercompat.CommonClass.spawnCraftingRemainder(level, pos, data.remainder);
                 } else if (com.fdimo.compostercompat.CommonClass.DEBUG) {
                     com.fdimo.compostercompat.CommonClass.debugLog("Composter used with item {}, but it is not in the cache or probability is 0. Cache has item: {}", stack.getHoverName().getString(), com.fdimo.compostercompat.CommonClass.COMPOSTER_CACHE.containsKey(stack.getItem()));
                 }
@@ -46,16 +46,6 @@ public class MixinComposterRemainder {
                     com.fdimo.compostercompat.CommonClass.debugLog("Composter interacted with rejected item {}. Tags: {}", stack.getHoverName().getString(), tags);
                 }
             }
-        }
-    }
-
-    private static void spawnCraftingRemainder(Level level, BlockPos pos, Item remainderItem) {
-        if (remainderItem != null) {
-            com.fdimo.compostercompat.CommonClass.debugLog("Spawning remainder item: {}", remainderItem);
-            Vec3 vec3 = Vec3.atLowerCornerWithOffset(pos, 0.5D, 1.01D, 0.5D).offsetRandom(level.getRandom(), 0.7F);
-            ItemEntity itemEntity = new ItemEntity(level, vec3.x(), vec3.y(), vec3.z(), new ItemStack(remainderItem));
-            itemEntity.setDefaultPickUpDelay();
-            level.addFreshEntity(itemEntity);
         }
     }
 }
