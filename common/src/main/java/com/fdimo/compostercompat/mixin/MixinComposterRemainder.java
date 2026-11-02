@@ -56,7 +56,7 @@ public class MixinComposterRemainder {
         }
     }
 
-    private static void spawnCraftingRemainder(Level level, BlockPos pos, Item remainderItem) {
+    public static void spawnCraftingRemainder(Level level, BlockPos pos, Item remainderItem) {
         if (remainderItem != null) {
             com.fdimo.compostercompat.CommonClass.debugLog("Spawning remainder item: {}", remainderItem);
             Vec3 vec3 = Vec3.atLowerCornerWithOffset(pos, 0.5D, 1.01D, 0.5D).offsetRandom(level.getRandom(), 0.7F);
