@@ -1,2 +1,3 @@
 - Sync compostables to client via network packet for recipe viewers
+- Fixed spawning crafting remainders when using hoppers in 26.x
 - Added mod icon
