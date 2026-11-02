@@ -630,6 +630,28 @@ public class CommonClass {
         Constants.LOG.info("Successfully populated Composter Cache with {} items!", COMPOSTER_CACHE.size());
     }
 
+    public static void spawnCraftingRemainder(net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.item.Item remainderItem) {
+        if (remainderItem != null) {
+            net.minecraft.world.item.ItemStack remainderStack = new net.minecraft.world.item.ItemStack(remainderItem);
+
+            // Try to insert directly into the container below (e.g. hopper, chest)
+            net.minecraft.world.Container containerBelow = net.minecraft.world.level.block.entity.HopperBlockEntity.getContainerAt(level, pos.below());
+            if (containerBelow != null) {
+                remainderStack = net.minecraft.world.level.block.entity.HopperBlockEntity.addItem(null, containerBelow, remainderStack, net.minecraft.core.Direction.UP);
+            }
+
+            // If there is any leftover (or no container below), drop into the world
+            if (!remainderStack.isEmpty()) {
+                debugLog("Spawning remainder item in world: {}", remainderItem);
+                net.minecraft.world.phys.Vec3 vec3 = net.minecraft.world.phys.Vec3.atLowerCornerWithOffset(pos, 0.5D, 1.01D, 0.5D).offsetRandom(level.getRandom(), 0.7F);
+                net.minecraft.world.entity.item.ItemEntity itemEntity = new net.minecraft.world.entity.item.ItemEntity(level, vec3.x(), vec3.y(), vec3.z(), remainderStack);
+                itemEntity.setDefaultPickUpDelay();
+                level.addFreshEntity(itemEntity);
+            } else {
+                debugLog("Inserted remainder item {} into container below at {}", remainderItem, pos.below());
+            }
+        }
+    }
     public static com.fdimo.compostercompat.network.SyncCompostablesPayload createSyncPayload() {
         java.util.List<com.fdimo.compostercompat.network.SyncCompostablesPayload.Entry> entries = new java.util.ArrayList<>();
         for (java.util.Map.Entry<net.minecraft.world.item.Item, CompostData> entry : COMPOSTER_CACHE.entrySet()) {
