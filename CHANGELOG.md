@@ -1,1 +1,1 @@
-- Fix compatibility issues
+- Sync compostables to client via network packet for recipe viewers
