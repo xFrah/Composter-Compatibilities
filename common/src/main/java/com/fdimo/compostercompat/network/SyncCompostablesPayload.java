@@ -4,15 +4,13 @@ import com.fdimo.compostercompat.Constants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public record SyncCompostablesPayload(List<Entry> entries) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<SyncCompostablesPayload> TYPE =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "sync_compostables"));
+    public static final CustomPacketPayload.Type<SyncCompostablesPayload> TYPE = createType(Constants.MOD_ID, "sync_compostables");
 
     public static final StreamCodec<FriendlyByteBuf, SyncCompostablesPayload> STREAM_CODEC =
             CustomPacketPayload.codec(SyncCompostablesPayload::write, SyncCompostablesPayload::new);
@@ -47,5 +45,22 @@ public record SyncCompostablesPayload(List<Entry> entries) implements CustomPack
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static CustomPacketPayload.Type<SyncCompostablesPayload> createType(String namespace, String path) {
+        try {
+            Class<?> locClass;
+            try {
+                locClass = Class.forName("net.minecraft.resources.ResourceLocation");
+            } catch (ClassNotFoundException e) {
+                locClass = Class.forName("net.minecraft.resources.Identifier");
+            }
+            Object loc = locClass.getMethod("fromNamespaceAndPath", String.class, String.class).invoke(null, namespace, path);
+            java.lang.reflect.Constructor<?> ctor = CustomPacketPayload.Type.class.getDeclaredConstructor(locClass);
+            return (CustomPacketPayload.Type<SyncCompostablesPayload>) ctor.newInstance(loc);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create packet payload type", e);
+        }
     }
 }
