@@ -4,6 +4,7 @@ import com.fdimo.compostercompat.Constants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public record SyncCompostablesPayload(List<Entry> entries) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<SyncCompostablesPayload> TYPE =
-            CustomPacketPayload.createType(Constants.MOD_ID + ":sync_compostables");
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "sync_compostables"));
 
     public static final StreamCodec<FriendlyByteBuf, SyncCompostablesPayload> STREAM_CODEC =
             CustomPacketPayload.codec(SyncCompostablesPayload::write, SyncCompostablesPayload::new);
