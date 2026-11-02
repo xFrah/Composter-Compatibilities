@@ -15,7 +15,7 @@ public class ComposterCompatMod implements ModInitializer {
         CommonClass.init();
 
         // Register custom payload type for configuration phase
-        PayloadTypeRegistry.configurationS2C().register(SyncCompostablesPayload.TYPE, SyncCompostablesPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundConfiguration().register(SyncCompostablesPayload.TYPE, SyncCompostablesPayload.STREAM_CODEC);
 
         CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> {
             CommonClass.rebuildComposterMap();
