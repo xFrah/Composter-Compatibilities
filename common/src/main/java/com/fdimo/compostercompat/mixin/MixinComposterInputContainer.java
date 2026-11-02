@@ -31,7 +31,7 @@ public abstract class MixinComposterInputContainer {
                 if (!stack.isEmpty()) {
                     CommonClass.CompostData data = CommonClass.COMPOSTER_CACHE.get(stack.getItem());
                     if (data != null && data.probability > 0) {
-                        MixinComposterRemainder.spawnCraftingRemainder(lvl, this.pos, data.remainder);
+                        CommonClass.spawnCraftingRemainder(lvl, this.pos, data.remainder);
                     }
                 }
             }
