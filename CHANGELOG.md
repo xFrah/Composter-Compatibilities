@@ -1,1 +1,1 @@
-- Fix compatibility issues
+- Added mod icon
