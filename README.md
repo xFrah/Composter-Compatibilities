@@ -1,14 +1,32 @@
-# Composter Compatibilities
+<div align="center">
+
+![Composter Compatibilities](https://media.forgecdn.net/attachments/description/1602597/description_3637e704-5229-442d-bb7a-dc5b41965f15.png)
+
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/1602597?logo=curseforge&label=CurseForge&color=F16436&style=for-the-badge)](https://www.curseforge.com/minecraft/mc-mods/composter-compatibilities)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/mNABp0x0?logo=modrinth&label=Modrinth&color=00AF5C&style=for-the-badge)](https://modrinth.com/mod/composter-compatibilities)
+
+[![Fabric](https://img.shields.io/badge/Fabric-DBD0B4?style=for-the-badge&logo=fabric&logoColor=1f1f1f)](https://fabricmc.net/)
+[![NeoForge](https://img.shields.io/badge/NeoForge-E05D26?style=for-the-badge&logo=forge&logoColor=white)](https://neoforged.net/)
+
+[![1.20.1](https://img.shields.io/badge/1.20.1-3C8527?style=for-the-badge&logo=minecraft&logoColor=white)](https://modrinth.com/mod/composter-compatibilities/versions)
+[![1.21.1](https://img.shields.io/badge/1.21.1-3C8527?style=for-the-badge&logo=minecraft&logoColor=white)](https://modrinth.com/mod/composter-compatibilities/versions)
+[![1.21.11](https://img.shields.io/badge/1.21.11-3C8527?style=for-the-badge&logo=minecraft&logoColor=white)](https://modrinth.com/mod/composter-compatibilities/versions)
+[![26.1.x](https://img.shields.io/badge/26.1.x-3C8527?style=for-the-badge&logo=minecraft&logoColor=white)](https://modrinth.com/mod/composter-compatibilities/versions)
+[![26.2](https://img.shields.io/badge/26.2-3C8527?style=for-the-badge&logo=minecraft&logoColor=white)](https://modrinth.com/mod/composter-compatibilities/versions)
+[![26.3](https://img.shields.io/badge/26.3-3C8527?style=for-the-badge&logo=minecraft&logoColor=white)](https://modrinth.com/mod/composter-compatibilities/versions)
+
+</div>
 
 A lightweight mod that dynamically makes items compostable! Its main goal is to provide automatic out-of-the-box composter compatibility for food and items added by other mods, without needing any configuration.
 
 ## Features
-
-- **Automatic Food Support:** Scans the item registry and automatically makes any food item compostable. The compost chance is scaled based on the food's nutrition value.
-- **Smart Categorization:** Automatically detects and adds support for items that should be compostable, such as seeds, crops, drinks, and bonemealable plants.
-- **Recipe Propagation:** If an item is crafted entirely from compostable ingredients, the mod will automatically make the crafted item compostable as well!
-- **Meat Rejection:** Specifically ignores meat, fish, and recipes crafted with them, keeping the composter vegetarian-friendly as intended by vanilla gameplay.
-- **Item Remainders:** If a compostable item is crafted with a bowl or a glass bottle (like a soup or a drink), composting it will correctly give you the empty bowl or bottle back instead of consuming it entirely!
+- Any food/vegetable is now compostable (except food that includes meat)
+- Drinks (in bottles or in buckets) are now compostable, and the composter will spit out the container after it's done!
+- Items made of all compostable items become compostable too.
+- Any bone-mealable item/block becomes compostable too.
+- Tags for making items compostable (or not compostable)
+- Meat and rotten meat can be compostable, if set in config.
+- Compatibility with JEI/REI/EMI, as they show the compostability of items.
 
 ## Compatibility
 
