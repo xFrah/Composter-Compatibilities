@@ -531,6 +531,11 @@ public class CommonClass {
             boolean changed = false;
 
             for (net.minecraft.world.item.crafting.Recipe<?> recipe : recipeManager.getRecipes()) {
+                net.minecraft.resources.ResourceLocation recipeTypeId = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType());
+                if (recipeTypeId == null || !ModConfig.isRecipeTypeAllowed(recipeTypeId.toString())) {
+                    continue;
+                }
+
                 net.minecraft.world.item.ItemStack resultStack = getRecipeResult(recipe, registryAccess);
 
                 if (resultStack == null || resultStack.isEmpty())
@@ -603,8 +608,9 @@ public class CommonClass {
                     setCompostChance(resultItem, highestProbability);
                     COMPOSTER_CACHE.put(resultItem,
                             new CompostData(highestProbability, null, "Derived from Compostable Recipe"));
-                    debugLog("Propagated compostability to {} with chance {} (Iteration {})",
-                            BuiltInRegistries.ITEM.getKey(resultItem), highestProbability, iteration + 1);
+                    debugLog("Propagated compostability to {} with chance {} via {} [{}] (Iteration {})",
+                            BuiltInRegistries.ITEM.getKey(resultItem), highestProbability, recipe.getId(),
+                            recipeTypeId, iteration + 1);
                     changed = true;
                 }
             }
