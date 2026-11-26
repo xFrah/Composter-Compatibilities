@@ -1,1 +1,2 @@
 - Whitelisted select recipe types for recipe propagation (see in config)
+- Fixed a few rogue heuristics (Ghast Tears being compostables because of "Tea" in "Tears")
