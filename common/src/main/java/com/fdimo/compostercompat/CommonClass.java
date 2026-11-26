@@ -179,6 +179,7 @@ public class CommonClass {
         // Tag log removed from here, moving to rejection cases
 
         String itemName = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath().toLowerCase();
+
         boolean isSeedLike = matchesAnyKeyword(itemName, tags, "seed", "seeds", "sapling", "saplings");
         if (isSeedLike) {
             if (DEBUG) {
@@ -194,14 +195,6 @@ public class CommonClass {
                 debugLog("Composter mapped {} (Crop) to 0.65 chance", stack.getHoverName().getString());
             }
             return new CompostData(0.65f, null, "Crop Keyword Match");
-        }
-
-        boolean isDrink = isDrink(itemName, tags);
-        if (isDrink) {
-            if (DEBUG) {
-                debugLog("Composter mapped {} (Drink) to 0.2 chance", stack.getHoverName().getString());
-            }
-            return new CompostData(0.2f, null, "Drink Keyword Match");
         }
 
         boolean isRottenFlesh = itemName.contains("rotten_flesh")
@@ -231,6 +224,14 @@ public class CommonClass {
             return new CompostData(-1.0f, null, "Meat");
         }
 
+        boolean isDrink = isDrink(itemName, tags);
+        if (isDrink) {
+            if (DEBUG) {
+                debugLog("Composter mapped {} (Drink) to 0.2 chance", stack.getHoverName().getString());
+            }
+            return new CompostData(0.2f, null, "Drink Keyword Match");
+        }
+        
         if (stack.getItem() instanceof net.minecraft.world.item.BlockItem blockItem) {
             net.minecraft.world.level.block.Block block = blockItem.getBlock();
             
@@ -355,46 +356,36 @@ public class CommonClass {
                 .filter(tag -> !tag.endsWith("_food"))
                 .toList();
 
-        boolean isMeat = matchesAnyKeyword(itemName, filteredTags,
+        if (matchesAnyKeyword(itemName, filteredTags,
                 "meat", "meats", "chicken", "chickens", "pork", "beef", "mutton",
-                "flesh", "fish", "fishes", "salmon", "cod", "rabbit", "rabbits", "ham", "bacon", "burger");
+                "flesh", "fish", "fishes", "salmon", "cod", "rabbit", "rabbits",
+                "ham", "bacon", "burger", "burgers", "steak", "steaks")) {
+            return true;
+        }
 
-        if (!isMeat) {
-            String[] meatKeywords = { "meat", "chicken", "pork", "beef", "mutton", "flesh", "fish", "salmon", "rabbit",
-                    "burger", "bacon" };
-            for (String keyword : meatKeywords) {
-                if (itemName.contains(keyword)) {
-                    return true;
-                }
+        String[] meatSubstrings = { "meat", "chicken", "pork", "beef", "mutton", "flesh", "fish", "rabbit",
+                "burger", "bacon" };
+        for (String keyword : meatSubstrings) {
+            if (itemName.contains(keyword)) {
+                return true;
             }
         }
-        return isMeat;
+        return false;
     }
 
     private static boolean isCrop(String itemName, java.util.List<String> tags) {
-        boolean isCrop = matchesAnyKeyword(itemName, tags, "crop", "crops");
-        if (!isCrop) {
-            String[] cropKeywords = { "crop" };
-            for (String keyword : cropKeywords) {
-                if (itemName.contains(keyword)) {
-                    return true;
-                }
-            }
-        }
-        return isCrop;
+        return matchesAnyKeyword(itemName, tags, "crop", "crops");
     }
 
     private static boolean isDrink(String itemName, java.util.List<String> tags) {
-        boolean isDrink = matchesAnyKeyword(itemName, tags, "drink", "drinks", "milk", "juice", "tea", "coffee");
-        if (!isDrink) {
-            String[] drinkKeywords = { "drink", "milk", "juice", "tea", "coffee" };
-            for (String keyword : drinkKeywords) {
-                if (itemName.contains(keyword)) {
-                    return true;
-                }
-            }
+        if (matchesAnyKeyword(itemName, tags, "drink", "drinks", "milk", "milks", "juice", "juices", "tea", "teas", "coffee", "coffees")) {
+            return true;
         }
-        return isDrink;
+        return itemName.contains("drink")
+                || itemName.contains("juice")
+                || itemName.contains("coffee")
+                || itemName.contains("milkshake")
+                || itemName.endsWith("milk");
     }
 
     public static final java.util.Map<net.minecraft.world.item.Item, CompostData> COMPOSTER_CACHE = new java.util.concurrent.ConcurrentHashMap<>();
