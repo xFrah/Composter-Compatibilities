@@ -1,4 +1,1 @@
-- Sync compostables to client via network packet for recipe viewers
-- Automatically insert crafting remainders into hoppers/containers below the composter
-- Fixed spawning crafting remainders when using hoppers in 26.x
-- Added mod icon
+- Whitelisted select recipe types for recipe propagation (see in config)
